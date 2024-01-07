@@ -1,0 +1,17 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body{
+    /* background-color: lightpink; */
+    margin: 0;
+    /* overflow: hidden; */
+}
+
+canvas{
+    background-color: lightblue;
+    display: block;
+}
