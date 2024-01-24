@@ -44,6 +44,9 @@ window.onload = function() {
         "#F25F29",
     ];
 
+    // distance for tri-angle pattern
+    const distanceOfTwoPoints = 90;
+
     // dot needs a x, y, dx, dy, radius
     class dot{
 
@@ -54,7 +57,8 @@ window.onload = function() {
             this.dx = dx;
             this.dy = dy;
             this.radius = radius;
-            this.color = pastelColors[Math.round(Math.random() * pastelColors.length)];
+            // this.color = pastelColors[Math.round(Math.random() * pastelColors.length)];
+            this.color = "#C4E5F2";
 
         }
 
@@ -71,6 +75,7 @@ window.onload = function() {
 
         update(){
 
+
             if( this.x + radius > innerWidth || this.x - radius < 0){
                 this.dx = -this.dx;
 
@@ -80,13 +85,43 @@ window.onload = function() {
                 this.dy = -this.dy;
             }
 
+            // for triangle pattern
+
+            for( let i=0; i<dots.length; i++ ){
+
+                const seocndDot = dots[i];
+
+                // check if second dot is not equal to this (dot)
+                if( seocndDot !== this ){
+
+                    // measure distance between both point
+                    // using formula of distance between two points in 2d plane
+                    
+                    const distance = Math.sqrt( ( this.x - seocndDot.x )**2 + ( this.y - seocndDot.y )**2 );
+
+    
+                    if( distance <= distanceOfTwoPoints){
+
+                        //create line between two points
+                        c.beginPath();
+                        c.moveTo( this.x, this.y );
+                        c.lineTo( seocndDot.x, seocndDot.y );
+                        c.strokeStyle = "#C4E5F2";
+                        c.stroke();
+                        c.closePath();
+                    }
+
+                }
+
+
+            }
             
 
 
             this.x += this.dx;
             this.y += this.dy;
 
-            console.log(this.x + "----" + this.y);
+
             this.draw();
         }
     }
@@ -95,17 +130,28 @@ window.onload = function() {
     var dots = [];
     
     // maximum dots on screen
-    var maxDots = 100;
+    var maxDots = 120;
     var radius = 6;
 
     for(let i=0; i<maxDots; i++){
 
-        var x = Math.round(Math.random() * (innerWidth - radius));
-        var y = Math.round(Math.random() * (innerHeight - radius));
-        var dx = Math.round( Math.random() * 4 - 2);
-        var dy = Math.round( Math.random() * 4 - 2);
+        var x = Math.round(Math.random() * (innerWidth - radius*2));
+        var y = Math.round(Math.random() * (innerHeight - radius*2));
+        var dx, dy = 0;
+
+        // ensuring that we don't get 0 as a dx or dy
+        // if we get 0 then they just get stuck on screen
+        do {
+            dx = Math.round(Math.random() * 4 - 2);
+        } while (dx === 0);
+        
+        do {
+            dy = Math.round(Math.random() * 4 - 2);
+        } while (dy === 0)
+
         // var dx =  Math.random() * 4;
         // var dy =  Math.random() * 4;
+
 
 
         dots.push( new dot(x, y, dx, dy, radius));
